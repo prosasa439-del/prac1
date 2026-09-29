@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +22,23 @@ class Program
 {
     const int WIDTH = 80;
     const int HEIGHT = 25;
+
+    const string TOP_LEFT = "\u2554";          // ╔
+    const string TOP_RIGHT = "\u2557";         // ╗
+    const string BOTTOM_LEFT = "\u255A";       // ╚
+    const string BOTTOM_RIGHT = "\u255D";      // ╝
+    const string DOUBLE_HORIZONTAL = "\u2550"; // ═
+    const string DOUBLE_VERTICAL = "\u2551";   // ║
+
+    const string JOIN_LEFT = "\u255F";         // ╟
+    const string JOIN_RIGHT = "\u2562";        // ╢
+
+    const string HORIZONTAL = "\u2500";        // ─
+    const string VERTICAL = "\u2502";          // │
+
+    const string DOWN_ARROW = "\u2193";        // ↓
+    const string RIGHT_ARROW = "\u25BA";       // ►
+    const string LEFT_ARROW = "\u25C4";        // ◄
 
     // Заранее подготовленный список файлов
     static List<FileItem> files = new List<FileItem>
@@ -99,7 +116,46 @@ class Program
             new DateTime(2026, 9, 13, 17, 21, 0)),
 
         new FileItem("video.mp4", 7340032,
-            new DateTime(2026, 9, 13, 21, 8, 0))
+            new DateTime(2026, 9, 13, 21, 8, 0)),
+
+        new FileItem("calculator_data.dat", 16384,
+            new DateTime(2026, 9, 15, 10, 22, 0)),
+
+        new FileItem("database.db", 45056,
+            new DateTime(2026, 9, 15, 12, 41, 0)),
+
+        new FileItem("design.png", 76432,
+            new DateTime(2026, 9, 16, 14, 18, 0)),
+
+        new FileItem("engine.dll", 196608,
+            new DateTime(2026, 9, 17, 9, 35, 0)),
+
+        new FileItem("installer.exe", 326784,
+            new DateTime(2026, 9, 18, 16, 27, 0)),
+
+        new FileItem("journal.txt", 5832,
+            new DateTime(2026, 9, 19, 11, 14, 0)),
+
+        new FileItem("kernel.sys", 87296,
+            new DateTime(2026, 9, 20, 18, 43, 0)),
+
+        new FileItem("library.zip", 628736,
+            new DateTime(2026, 9, 21, 13, 52, 0)),
+
+        new FileItem("manual.pdf", 245760,
+            new DateTime(2026, 9, 22, 15, 38, 0)),
+
+        new FileItem("project_backup.zip", 2097152,
+            new DateTime(2026, 9, 23, 20, 11, 0)),
+
+        new FileItem("summary.docx", 62418,
+            new DateTime(2026, 9, 24, 17, 29, 0)),
+
+        new FileItem("tools.exe", 57344,
+            new DateTime(2026, 9, 25, 8, 47, 0)),
+
+        new FileItem("workspace.cfg", 2946,
+            new DateTime(2026, 9, 26, 19, 16, 0))
     };
 
     static void Main()
@@ -113,7 +169,7 @@ class Program
         }
         catch
         {
-            // Некоторые терминалы не позволяют менять размер.
+            // Некоторые терминалы не позволяют изменить размер.
         }
 
         Console.CursorVisible = false;
@@ -121,7 +177,12 @@ class Program
         DrawInterface();
 
         Console.ReadKey();
+
+        Console.ResetColor();
+        Console.Clear();
     }
+
+    // Основной интерфейс
 
     static void DrawInterface()
     {
@@ -130,7 +191,6 @@ class Program
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.ForegroundColor = ConsoleColor.White;
 
-        // Заполняем весь экран
         for (int y = 0; y < HEIGHT; y++)
         {
             for (int x = 0; x < WIDTH; x++)
@@ -145,125 +205,150 @@ class Program
         DrawBottom();
     }
 
-    // ----------------------------------------------------
     // Верхнее меню
-    // ----------------------------------------------------
 
     static void DrawTopMenu()
     {
-        Console.ForegroundColor = ConsoleColor.Yellow;
         Console.BackgroundColor = ConsoleColor.DarkBlue;
 
-        WriteAt(5, 0, "Левая");
-        WriteAt(17, 0, "Файл");
-        WriteAt(28, 0, "Диск");
-        WriteAt(40, 0, "Команды");
-        WriteAt(55, 0, "Правая");
+        DrawMenuWord(4, 0, "Левая");
+        DrawMenuWord(17, 0, "Файл");
+        DrawMenuWord(28, 0, "Диск");
+        DrawMenuWord(40, 0, "Команды");
+        DrawMenuWord(55, 0, "Правая");
+
+        Console.ForegroundColor = ConsoleColor.Cyan;
+
+        for (int x = 0; x < WIDTH; x++)
+        {
+            WriteAt(x, 1, DOUBLE_HORIZONTAL);
+        }
     }
 
-    // ----------------------------------------------------
+    static void DrawMenuWord(int x, int y, string word)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        WriteAt(x, y, word[0].ToString());
+
+        Console.ForegroundColor = ConsoleColor.Cyan;
+
+        for (int i = 1; i < word.Length; i++)
+        {
+            WriteAt(x + i, y, word[i].ToString());
+        }
+    }
+
     // Левая панель
-    // ----------------------------------------------------
 
     static void DrawLeftPanel()
     {
-        DrawBox(0, 3, 39, 21);
+        int left = 0;
+        int right = 39;
+        int top = 2;
+        int bottom = 22;
+
+        DrawDoubleBox(left, top, right, bottom);
 
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.ForegroundColor = ConsoleColor.Yellow;
 
         WriteAt(16, 2, "C:\\NC");
 
-        // Заголовки
-        WriteAt(2, 4, "Имя");
-        WriteAt(15, 4, "Имя");
-        WriteAt(27, 4, "Имя");
+        WriteAt(2, 4, "C:" + DOWN_ARROW);
+        WriteAt(7, 4, "Имя");
+        WriteAt(19, 4, "Имя");
+        WriteAt(31, 4, "Имя");
 
         Console.ForegroundColor = ConsoleColor.White;
 
-        // Разделители колонок
-        for (int y = 4; y <= 18; y++)
+        for (int y = 4; y <= 19; y++)
         {
-            WriteAt(13, y, "│");
-            WriteAt(25, y, "│");
+            WriteAt(13, y, VERTICAL);
+            WriteAt(26, y, VERTICAL);
         }
 
-        // Горизонтальная линия
+        WriteAt(0, 20, JOIN_LEFT);
+
         for (int x = 1; x < 39; x++)
         {
-            WriteAt(x, 18, "─");
+            WriteAt(x, 20, HORIZONTAL);
         }
+
+        WriteAt(39, 20, JOIN_RIGHT);
 
         DrawLeftFiles();
 
-        // Нижняя информация
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.ForegroundColor = ConsoleColor.White;
 
-        WriteAt(1, 19, "..");
+        WriteAt(1, 21, "..");
 
         Console.ForegroundColor = ConsoleColor.Cyan;
-        WriteAt(5, 19, "►КАТАЛОГ◄");
+        WriteAt(5, 21, RIGHT_ARROW + "КАТАЛОГ" + LEFT_ARROW);
 
         Console.ForegroundColor = ConsoleColor.White;
-        WriteAt(16, 19, "14.09.26");
-        WriteAt(26, 19, "18:42");
+        WriteAt(17, 21, "14.09.26");
+        WriteAt(27, 21, "18:42");
     }
 
-    // ----------------------------------------------------
     // Правая панель
-    // ----------------------------------------------------
 
     static void DrawRightPanel()
     {
-        DrawBox(40, 3, 79, 21);
+        int left = 40;
+        int right = 79;
+        int top = 2;
+        int bottom = 22;
+
+        DrawDoubleBox(left, top, right, bottom);
 
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.ForegroundColor = ConsoleColor.Yellow;
 
-        WriteAt(57, 2, "C:\\NC");
+        WriteAt(56, 2, "C:\\NC");
 
-        // Заголовки
-        WriteAt(42, 4, "Имя");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+
+        WriteAt(42, 4, "C:" + DOWN_ARROW);
+        WriteAt(47, 4, "Имя");
         WriteAt(56, 4, "Размер");
-        WriteAt(65, 4, "Дата");
+        WriteAt(66, 4, "Дата");
         WriteAt(74, 4, "Время");
 
         Console.ForegroundColor = ConsoleColor.White;
 
-        // Разделители
-        for (int y = 4; y <= 18; y++)
+        for (int y = 4; y <= 19; y++)
         {
-            WriteAt(55, y, "│");
-            WriteAt(64, y, "│");
-            WriteAt(73, y, "│");
+            WriteAt(54, y, VERTICAL);
+            WriteAt(64, y, VERTICAL);
+            WriteAt(73, y, VERTICAL);
         }
 
-        // Горизонтальная линия
+        WriteAt(40, 20, JOIN_LEFT);
+
         for (int x = 41; x < 79; x++)
         {
-            WriteAt(x, 18, "─");
+            WriteAt(x, 20, HORIZONTAL);
         }
+
+        WriteAt(79, 20, JOIN_RIGHT);
 
         DrawRightFiles();
 
-        // Нижняя информация
+        // Нижняя строка панели
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.ForegroundColor = ConsoleColor.White;
 
-        WriteAt(41, 19, "..");
+        WriteAt(41, 21, "..");
 
         Console.ForegroundColor = ConsoleColor.Cyan;
-        WriteAt(53, 19, "►КАТАЛОГ◄");
+        WriteAt(53, 21, RIGHT_ARROW + "КАТАЛОГ" + LEFT_ARROW);
 
         Console.ForegroundColor = ConsoleColor.White;
-        WriteAt(65, 19, "14.09.26");
-        WriteAt(74, 19, "18:42");
+        WriteAt(65, 21, "14.09.26");
+        WriteAt(74, 21, "18:42");
     }
-
-    // ----------------------------------------------------
     // Файлы левой панели
-    // ----------------------------------------------------
 
     static void DrawLeftFiles()
     {
@@ -271,17 +356,15 @@ class Program
             .OrderBy(f => f.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        // Делим список на 3 примерно равные части.
-        // Поэтому все три колонки будут заполнены.
-        int total = Math.Min(sorted.Count, 39);
-        int rowsPerColumn = (int)Math.Ceiling(total / 3.0);
+        int count = Math.Min(sorted.Count, 39);
 
-        for (int i = 0; i < total; i++)
+        int rows = (int)Math.Ceiling(count / 3.0);
+
+        for (int i = 0; i < count; i++)
         {
-            int column = i / rowsPerColumn;
-            int row = i % rowsPerColumn;
+            int column = i / rows;
+            int row = i % rows;
 
-            // Координаты начала трёх колонок
             int x;
 
             if (column == 0)
@@ -289,22 +372,21 @@ class Program
             else if (column == 1)
                 x = 14;
             else
-                x = 26;
+                x = 27;
 
             int y = 5 + row;
 
-            // Не выходим за границу панели
-            if (y > 17)
+            if (y > 19)
                 continue;
 
             FileItem file = sorted[i];
 
-            string baseName;
+            string name;
             string extension = "";
 
-            if (file.IsDirectory || file.Name == "..")
+            if (file.IsDirectory)
             {
-                baseName = ShortenName(file.Name, 7);
+                name = ShortenName(file.Name, 7);
             }
             else
             {
@@ -312,8 +394,10 @@ class Program
 
                 if (dot > 0)
                 {
-                    baseName = ShortenName(
-                        file.Name.Substring(0, dot), 7);
+                    name = ShortenName(
+                        file.Name.Substring(0, dot),
+                        7
+                    );
 
                     extension = file.Name.Substring(dot + 1);
 
@@ -322,18 +406,17 @@ class Program
                 }
                 else
                 {
-                    baseName = ShortenName(file.Name, 7);
+                    name = ShortenName(file.Name, 7);
                 }
             }
 
-            // Каталоги отображаются другим цветом
             if (file.IsDirectory)
                 Console.ForegroundColor = ConsoleColor.Cyan;
             else
                 Console.ForegroundColor = ConsoleColor.White;
 
             string text =
-                baseName.PadRight(7) +
+                name.PadRight(7) +
                 " " +
                 extension.PadRight(3);
 
@@ -341,9 +424,7 @@ class Program
         }
     }
 
-    // ----------------------------------------------------
     // Файлы правой панели
-    // ----------------------------------------------------
 
     static void DrawRightFiles()
     {
@@ -353,6 +434,7 @@ class Program
             .ToList();
 
         // Выделенная строка
+
         Console.BackgroundColor = ConsoleColor.Cyan;
         Console.ForegroundColor = ConsoleColor.Black;
 
@@ -361,14 +443,20 @@ class Program
             WriteAt(x, 5, " ");
         }
 
-        WriteAt(41, 5, "►КАТАЛОГ◄");
+        WriteAt(
+            41,
+            5,
+            RIGHT_ARROW + "КАТАЛОГ" + LEFT_ARROW
+        );
+
         WriteAt(65, 5, "14.09.26");
-        WriteAt(74, 5, "18:42");
+
+        WriteAt(74, 5, "18:48");
 
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.ForegroundColor = ConsoleColor.White;
 
-        int maxRows = 12;
+        int maxRows = 14;
 
         for (int i = 0; i < sorted.Count && i < maxRows; i++)
         {
@@ -376,35 +464,45 @@ class Program
 
             int y = 6 + i;
 
-            string name = ShortenName(file.Name, 14);
-            string size = file.Size.ToString().PadLeft(8);
+            string name = ShortenName(file.Name, 13);
+            string size = file.Size.ToString();
             string date = file.Modified.ToString("dd.MM.yy");
             string time = file.Modified.ToString("HH:mm");
 
-            WriteAt(41, y, name.PadRight(14));
-            WriteAt(56, y, size);
+            WriteAt(41, y, name.PadRight(13));
+
+            WriteAt(55, y, size.PadLeft(9));
+
             WriteAt(65, y, date);
-            WriteAt(74, y, time);
+
+             WriteAt(74, y, time);
         }
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.BackgroundColor = ConsoleColor.DarkBlue;
+
+        for (int y = 5; y <= 19; y++)
+        {
+            WriteAt(54, y, VERTICAL);
+            WriteAt(64, y, VERTICAL);
+            WriteAt(73, y, VERTICAL);
+        }
+
+        Console.BackgroundColor = ConsoleColor.DarkBlue;
+        Console.ForegroundColor = ConsoleColor.White;
     }
 
-    // ----------------------------------------------------
-    // Нижняя часть интерфейса
-    // ----------------------------------------------------
+   // Нижняя часть
 
     static void DrawBottom()
     {
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.ForegroundColor = ConsoleColor.White;
 
-        // Горизонтальная линия
         for (int x = 0; x < WIDTH; x++)
         {
-            WriteAt(x, 22, "─");
+            WriteAt(x, 23, DOUBLE_HORIZONTAL);
         }
-
-        // Командная строка
-        WriteAt(1, 23, "C:\\NC>");
 
         string[] buttons =
         {
@@ -442,40 +540,47 @@ class Program
         Console.ForegroundColor = ConsoleColor.White;
     }
 
-    // ----------------------------------------------------
-    // Рамка
-    // ----------------------------------------------------
-
-    static void DrawBox(int left, int top, int right, int bottom)
+    static void DrawDoubleBox(
+        int left,
+        int top,
+        int right,
+        int bottom)
     {
         Console.BackgroundColor = ConsoleColor.DarkBlue;
-        Console.ForegroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.Cyan;
 
         // Верхняя граница
         WriteAt(
             left,
             top,
-            "┌" + new string('─', right - left - 1) + "┐"
+            TOP_LEFT +
+            new string(
+                DOUBLE_HORIZONTAL[0],
+                right - left - 1
+            ) +
+            TOP_RIGHT
         );
 
         // Боковые границы
         for (int y = top + 1; y < bottom; y++)
         {
-            WriteAt(left, y, "│");
-            WriteAt(right, y, "│");
+            WriteAt(left, y, DOUBLE_VERTICAL);
+            WriteAt(right, y, DOUBLE_VERTICAL);
         }
 
         // Нижняя граница
         WriteAt(
             left,
             bottom,
-            "└" + new string('─', right - left - 1) + "┘"
+            BOTTOM_LEFT +
+            new string(
+                DOUBLE_HORIZONTAL[0],
+                right - left - 1
+            ) +
+            BOTTOM_RIGHT
         );
     }
 
-    // ----------------------------------------------------
-    // Сокращение длинных имён
-    // ----------------------------------------------------
 
     static string ShortenName(string name, int maxLength)
     {
@@ -484,10 +589,6 @@ class Program
 
         return name.Substring(0, maxLength - 1) + "~";
     }
-
-    // ----------------------------------------------------
-    // Вывод текста
-    // ----------------------------------------------------
 
     static void WriteAt(int x, int y, string text)
     {
